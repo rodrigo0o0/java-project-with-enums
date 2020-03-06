@@ -1,5 +1,11 @@
 package application;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -10,11 +16,15 @@ import entities.enums.WorkerLevel;
 
 public class Program {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ParseException {
 
 		Locale.setDefault(Locale.US);
 		Scanner sc = new Scanner(System.in);
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat sdf2 = new SimpleDateFormat("MM/yyyy");
+		
+		List  <HourContract>hourContract = new ArrayList<>(); 
+		
 		System.out.print("Enter department's name:  ");
 		String departmentName = sc.nextLine();
 		
@@ -33,15 +43,42 @@ public class Program {
 		for (int i = 0; i < qtContracts; i++) {
 			System.out.println("Enter the contract #"+(i+1)+" data :");
 			System.out.print("Date (DD/MM/YYYY): ");
-			String dateContract = sc.nextLine();
+			sc.nextLine();
+			String date = sc.nextLine();
+			Date dateContract = sdf.parse(date);
 			System.out.print("\nValue per hour: ");
 			double valuePerHour = sc.nextDouble();
 			System.out.print("\nDuration (hours):");
 			int duration = sc.nextInt();
+			hourContract.add(new HourContract(dateContract, valuePerHour, duration));
 			
 			
 		}
 		
+		System.out.print("Enter month and year to calculate income (MM/YYYY)" );
+		sc.nextLine();
+		String date = sc.nextLine();
+		Double sum = worker.getBaseSalary();
+		
+		Date dateFormated = sdf2.parse(date);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(dateFormated);
+		int month = cal.get(Calendar.MONTH);
+		int year = cal.get(Calendar.YEAR);
+		
+		for (HourContract hc : hourContract) {
+			cal.setTime(hc.getDate());
+			int monthHC = cal.get(Calendar.MONTH);
+			int yearHC = cal.get(Calendar.YEAR);
+			
+			if(year == yearHC && month == monthHC) {
+				sum += hc.totalValue();
+			}
+		}
+		
+		System.out.println("Name : " + worker.getName());
+		System.out.println("Department : "+ worker.getDepartment().getName());
+		System.out.println("Income for " + sdf2.format(dateFormated) + " : $" + sum );
 		
 		
 		sc.close();
