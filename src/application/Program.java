@@ -2,10 +2,8 @@ package application;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -23,7 +21,6 @@ public class Program {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		SimpleDateFormat sdf2 = new SimpleDateFormat("MM/yyyy");
 		
-		List  <HourContract>hourContract = new ArrayList<>(); 
 		
 		System.out.print("Enter department's name:  ");
 		String departmentName = sc.nextLine();
@@ -50,7 +47,7 @@ public class Program {
 			double valuePerHour = sc.nextDouble();
 			System.out.print("\nDuration (hours):");
 			int duration = sc.nextInt();
-			hourContract.add(new HourContract(dateContract, valuePerHour, duration));
+			worker.addContract( new HourContract(dateContract, valuePerHour, duration));
 			
 			
 		}
@@ -58,14 +55,17 @@ public class Program {
 		System.out.print("Enter month and year to calculate income (MM/YYYY)" );
 		sc.nextLine();
 		String date = sc.nextLine();
-		Double sum = worker.getBaseSalary();
 		
 		Date dateFormated = sdf2.parse(date);
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(dateFormated);
 		int month = cal.get(Calendar.MONTH);
+		System.out.println("mes para resgatar no month "+month);
 		int year = cal.get(Calendar.YEAR);
+		double sum = worker.income(year, month);
 		
+		
+		/*
 		for (HourContract hc : hourContract) {
 			cal.setTime(hc.getDate());
 			int monthHC = cal.get(Calendar.MONTH);
@@ -76,6 +76,7 @@ public class Program {
 			}
 		}
 		
+		*/
 		System.out.println("Name : " + worker.getName());
 		System.out.println("Department : "+ worker.getDepartment().getName());
 		System.out.println("Income for " + sdf2.format(dateFormated) + " : $" + sum );
